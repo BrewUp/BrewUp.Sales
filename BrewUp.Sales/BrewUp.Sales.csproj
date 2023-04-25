@@ -14,6 +14,7 @@
 		<PackageReference Include="Microsoft.Extensions.Logging" Version="7.0.0" />
 		<PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
 		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.18.1" />
+    <PackageReference Include="Muflone.Saga.Persistence.MongoDb" Version="6.0.0" />
 		<PackageReference Include="Serilog" Version="2.12.0" />
 		<PackageReference Include="Serilog.Extensions.Logging" Version="3.1.0" />
 		<PackageReference Include="Serilog.Settings.Configuration" Version="3.4.0" />
@@ -24,6 +25,12 @@
 	<ItemGroup>
 	  <Folder Include="Models\" />
 	  <Folder Include="Validators\" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\Brewup.Sales.ApplicationService\Brewup.Sales.ApplicationService.csproj" />
+	  <ProjectReference Include="..\Brewup.Sales.Muflone\Brewup.Sales.Muflone.csproj" />
+	  <ProjectReference Include="..\Brewup.Sales.ReadModel.MongoDb\Brewup.Sales.ReadModel.MongoDb.csproj" />
 	</ItemGroup>
 
 </Project>

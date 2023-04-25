@@ -1,5 +1,5 @@
-﻿using Brewup.Modules.Sales.Shared.CustomTypes;
-using Brewup.Sales.ReadModel.Abstracts;
+﻿using Brewup.Sales.ReadModel.Abstracts;
+using Brewup.Sales.Shared.CustomTypes;
 
 namespace Brewup.Sales.ReadModel.Models;
 
