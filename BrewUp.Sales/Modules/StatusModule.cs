@@ -7,29 +7,16 @@ namespace BrewUp.Sales.Modules
 
 		public IServiceCollection RegisterModule(WebApplicationBuilder builder)
 		{
+			builder.Services.AddHealthChecks();
+
 			return builder.Services;
 		}
 
 		public IEndpointRouteBuilder MapEndpoints(IEndpointRouteBuilder endpoints)
 		{
-			endpoints.MapGet("/-/healthz", HandleStatus)
-				.Produces(StatusCodes.Status204NoContent)
-				.WithTags("Status");
-
-			endpoints.MapGet("/-/ready", HandleStatus)
-				.Produces(StatusCodes.Status204NoContent)
-				.WithTags("Status");
-
-			endpoints.MapGet("/-/check-up", HandleStatus)
-				.Produces(StatusCodes.Status204NoContent)
-				.WithTags("Status");
+			endpoints.MapHealthChecks("/health");
 
 			return endpoints;
-		}
-
-		private static IResult HandleStatus()
-		{
-			return Results.NoContent();
 		}
 	}
 }

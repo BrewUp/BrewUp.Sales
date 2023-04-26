@@ -1,8 +1,7 @@
 ﻿using Brewup.Sales.ApplicationService;
 using Brewup.Sales.ApplicationService.Endpoints;
-using BrewUp.Sales.Modules;
 
-namespace Brewup.Modules;
+namespace BrewUp.Sales.Modules;
 
 public class SalesModule : IModule
 {
