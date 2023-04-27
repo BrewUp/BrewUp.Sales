@@ -22,7 +22,13 @@ public class SalesModule : IModule
 
 		mapGroup.MapPost("", SalesEndpoints.HandleAddOrder)
 			.Produces(StatusCodes.Status400BadRequest)
+			.Produces(StatusCodes.Status200OK)
 			.WithName("AddOrder");
+
+		mapGroup.MapGet("", SalesEndpoints.HandleGetOrders)
+			.Produces(StatusCodes.Status400BadRequest)
+			.Produces(StatusCodes.Status200OK)
+			.WithName("GetSalesOrders");
 
 		return endpoints;
 	}
