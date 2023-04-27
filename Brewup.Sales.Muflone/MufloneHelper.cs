@@ -1,12 +1,17 @@
-﻿using Brewup.Sales.Muflone.Consumers.Commands;
+﻿using Azure.Messaging.ServiceBus;
+using Brewup.Sales.Muflone.Consumers.Commands;
+using Brewup.Sales.Muflone.Consumers.Events;
 using Brewup.Sales.Shared.Commands;
 using Brewup.Sales.Shared.Configuration;
+using Brewup.Sales.Shared.DomainEvents;
+using Brewup.Sales.Shared.IntegrationEvents;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Muflone;
 using Muflone.Persistence;
 using Muflone.Transport.Azure;
 using Muflone.Transport.Azure.Abstracts;
+using Muflone.Transport.Azure.Factories;
 using Muflone.Transport.Azure.Models;
 
 namespace Brewup.Sales.Muflone;
@@ -18,6 +23,8 @@ public static class MufloneHelper
 		// I need to register IServiceBus and IEventBus due to Saga implementation
 		services.AddSingleton<IServiceBus, ServiceBus>();
 		services.AddSingleton<IEventBus, ServiceBus>();
+		services.AddSingleton(new ServiceBusClient(serviceBusSettings.ConnectionString));
+		services.AddSingleton<IServiceBusSenderFactory, ServiceBusSenderFactory>();
 
 		var serviceProvider = services.BuildServiceProvider();
 		var loggerFactory = serviceProvider.GetService<ILoggerFactory>();
@@ -29,14 +36,13 @@ public static class MufloneHelper
 
 		var consumers = new List<IConsumer>
 		{
-			new AskForBeersAvailabilityConsumer(repository!, azureBusConfiguration, loggerFactory!),
+			new AskForBeersAvailabilityConsumer(repository!, azureBusConfiguration with { TopicName = nameof(AskForBeersAvailability)}, loggerFactory!),
 
 			new CreateSalesOrderConsumer(repository!, azureBusConfiguration with { TopicName = nameof(CreateSalesOrder)}, loggerFactory!),
-			//new SalesOrderCreatedConsumer(serviceProvider, azureBusConfiguration with { TopicName = nameof(SalesOrderCreated)}, loggerFactory!),
+			new SalesOrderCreatedConsumer(serviceProvider, azureBusConfiguration with { TopicName = nameof(SalesOrderCreated)}, loggerFactory!),
 
-			//new BeersAvailabilityAskedConsumer(serviceProvider, azureBusConfiguration with { TopicName = nameof(BeersAvailabilityAsked) }, loggerFactory!),
-			//new BroadcastBeerWithdrawnConsumer(serviceProvider, azureBusConfiguration with { TopicName = nameof(BroadcastBeerWithdrawn)}, loggerFactory !),
-			//new BroadcastWarehouseCreatedConsumer(serviceProvider, azureBusConfiguration with { TopicName = nameof(BroadcastWarehouseCreated)}, loggerFactory !)
+			new BeersAvailabilityAskedConsumer(serviceProvider, azureBusConfiguration with { TopicName = nameof(BeersAvailabilityAsked) }, loggerFactory!),
+			new BroadcastBeerWithdrawnConsumer(serviceProvider, azureBusConfiguration with { TopicName = nameof(BroadcastBeerWithdrawn)}, loggerFactory !)
 		};
 
 		services.AddMufloneTransportAzure(

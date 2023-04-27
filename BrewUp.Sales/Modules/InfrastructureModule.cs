@@ -22,6 +22,7 @@ public class InfrastructureModule : IModule
 			.CreateLogger();
 
 		builder.Services.AddScoped<ValidationHandler>();
+		builder.Services.AddScoped<SalesOrderSaga>();
 
 		builder.Services.AddMongoDb(builder.Configuration.GetSection("BrewUp:MongoDbSettings").Get<MongoDbSettings>()!);
 		builder.Services.AddEventstoreMongoDb(builder.Configuration.GetSection("BrewUp:MongoDbSettings").Get<MongoDbSettings>()!);
@@ -30,8 +31,6 @@ public class InfrastructureModule : IModule
 
 		builder.Services.AddMufloneEventStore(builder.Configuration["BrewUp:EventStoreSettings:ConnectionString"]!);
 		builder.Services.AddMuflone(builder.Configuration.GetSection("BrewUp:ServiceBusSettings").Get<ServiceBusSettings>()!);
-
-		builder.Services.AddScoped<SalesOrderSaga>();
 
 		return builder.Services;
 	}

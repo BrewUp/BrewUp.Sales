@@ -1,5 +1,4 @@
-﻿using Brewup.Sales.Domain.CommandHandlers;
-using Brewup.Sales.Shared.Commands;
+﻿using Brewup.Sales.Shared.Commands;
 using Microsoft.Extensions.Logging;
 using Muflone.Messages.Commands;
 using Muflone.Persistence;
@@ -16,6 +15,5 @@ public sealed class AskForBeersAvailabilityConsumer : CommandConsumerBase<AskFor
 		AzureServiceBusConfiguration azureServiceBusConfiguration,
 		ILoggerFactory loggerFactory, ISerializer? messageSerializer = null) : base(azureServiceBusConfiguration, loggerFactory, messageSerializer)
 	{
-		HandlerAsync = new AskForBeersAvailabilityCommandHandler(repository, loggerFactory);
 	}
 }

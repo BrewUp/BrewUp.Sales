@@ -53,12 +53,11 @@ public class SalesOrderSaga : Saga<SalesSagaState>,
 		};
 
 		// Save SagaState
-		var correlationId = Guid.NewGuid();
-		await Repository.SaveAsync(correlationId, SagaState);
+		await Repository.SaveAsync(command.MessageId, SagaState);
 
 		// I have to send the first command of the saga
 		var askForBeersAvailability =
-			new AskForBeersAvailability(command.WarehouseId, correlationId, command.Rows.Select(r => r.BeerId));
+			new AskForBeersAvailability(command.WarehouseId, command.MessageId, command.Rows.Select(r => r.BeerId));
 		await ServiceBus.SendAsync(askForBeersAvailability, CancellationToken.None);
 	}
 
@@ -69,6 +68,9 @@ public class SalesOrderSaga : Saga<SalesSagaState>,
 
 		if (sagaState is null)
 			return;
+
+		sagaState.AvailabilityChecked = true;
+		await Repository.SaveAsync(correlationId, SagaState);
 
 		// Verify availability
 		// With availability we create order
@@ -101,8 +103,15 @@ public class SalesOrderSaga : Saga<SalesSagaState>,
 		await ServiceBus.SendAsync(createSalesOrder, cancellationToken);
 	}
 
-	public Task HandleAsync(SalesOrderCreated @event, CancellationToken cancellationToken = new())
+	public async Task HandleAsync(SalesOrderCreated @event, CancellationToken cancellationToken = new())
 	{
-		return Task.CompletedTask;
+		var correlationId = new Guid(@event.UserProperties.FirstOrDefault(u => u.Key.Equals("CorrelationId")).Value.ToString()!);
+		var sagaState = await Repository.GetByIdAsync<SalesSagaState>(correlationId);
+
+		if (sagaState is null)
+			return;
+
+		sagaState.SalesOrderCreated = true;
+		await Repository.SaveAsync(correlationId, SagaState);
 	}
 }

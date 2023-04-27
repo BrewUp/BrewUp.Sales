@@ -7,7 +7,6 @@ public class SalesSagaState
 	public Guid SagaId { get; set; } = Guid.NewGuid();
 
 	public SalesOrderJson Order { get; set; } = new();
-	public bool StoreAvailabilityChecked { get; set; } = false;
-	public bool PaymentAvailabilityChecked { get; set; } = false;
-	public bool DeliveryOrderLaunched { get; set; } = false;
+	public bool AvailabilityChecked { get; set; } = false;
+	public bool SalesOrderCreated { get; set; } = false;
 }

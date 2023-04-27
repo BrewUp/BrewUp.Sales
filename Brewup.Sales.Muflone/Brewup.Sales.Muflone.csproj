@@ -13,12 +13,19 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Brewup.Sales.ApplicationService\Brewup.Sales.ApplicationService.csproj" />
     <ProjectReference Include="..\Brewup.Sales.Domain\Brewup.Sales.Domain.csproj" />
     <ProjectReference Include="..\Brewup.Sales.Shared\Brewup.Sales.Shared.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Factories\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Muflone.Transport.Azure">
+      <HintPath>..\..\..\CQRS-Muflone\Muflone.Transport.Azure\src\Muflone.Transport.Azure\bin\Debug\net6.0\Muflone.Transport.Azure.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>
