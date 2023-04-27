@@ -7,11 +7,11 @@ using Muflone.Transport.Azure.Models;
 
 namespace Brewup.Sales.Muflone.Consumers.Commands;
 
-public sealed class AskForBeersAvailabilityConsumer : CommandConsumerBase<AskForBeersAvailability>
+public sealed class WithdrawalFromWarehouseConsumer : CommandConsumerBase<WithdrawalFromWarehouse>
 {
-	protected override ICommandHandlerAsync<AskForBeersAvailability> HandlerAsync => default!;
+	protected override ICommandHandlerAsync<WithdrawalFromWarehouse> HandlerAsync => default!;
 
-	public AskForBeersAvailabilityConsumer(IRepository repository,
+	public WithdrawalFromWarehouseConsumer(IRepository repository,
 		AzureServiceBusConfiguration azureServiceBusConfiguration,
 		ILoggerFactory loggerFactory, ISerializer? messageSerializer = null) : base(azureServiceBusConfiguration, loggerFactory, messageSerializer)
 	{

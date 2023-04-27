@@ -21,10 +21,10 @@ public static class MufloneHelper
 	public static IServiceCollection AddMuflone(this IServiceCollection services, ServiceBusSettings serviceBusSettings)
 	{
 		// I need to register IServiceBus and IEventBus due to Saga implementation
-		services.AddSingleton<IServiceBus, ServiceBus>();
-		services.AddSingleton<IEventBus, ServiceBus>();
 		services.AddSingleton(new ServiceBusClient(serviceBusSettings.ConnectionString));
 		services.AddSingleton<IServiceBusSenderFactory, ServiceBusSenderFactory>();
+		services.AddSingleton<IServiceBus, ServiceBus>();
+		services.AddSingleton<IEventBus, ServiceBus>();
 
 		var serviceProvider = services.BuildServiceProvider();
 		var loggerFactory = serviceProvider.GetService<ILoggerFactory>();
@@ -37,11 +37,13 @@ public static class MufloneHelper
 		var consumers = new List<IConsumer>
 		{
 			new AskForBeersAvailabilityConsumer(repository!, azureBusConfiguration with { TopicName = nameof(AskForBeersAvailability)}, loggerFactory!),
+			new BeersAvailabilityAskedConsumer(serviceProvider, azureBusConfiguration with { TopicName = nameof(BeersAvailabilityAsked) }, loggerFactory!),
+
+			new WithdrawalFromWarehouseConsumer(repository!, azureBusConfiguration with { TopicName = nameof(WithdrawalFromWarehouse)}, loggerFactory!),
 
 			new CreateSalesOrderConsumer(repository!, azureBusConfiguration with { TopicName = nameof(CreateSalesOrder)}, loggerFactory!),
 			new SalesOrderCreatedConsumer(serviceProvider, azureBusConfiguration with { TopicName = nameof(SalesOrderCreated)}, loggerFactory!),
 
-			new BeersAvailabilityAskedConsumer(serviceProvider, azureBusConfiguration with { TopicName = nameof(BeersAvailabilityAsked) }, loggerFactory!),
 			new BroadcastBeerWithdrawnConsumer(serviceProvider, azureBusConfiguration with { TopicName = nameof(BroadcastBeerWithdrawn)}, loggerFactory !)
 		};
 

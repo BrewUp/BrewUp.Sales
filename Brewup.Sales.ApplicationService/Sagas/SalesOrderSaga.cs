@@ -66,11 +66,8 @@ public class SalesOrderSaga : Saga<SalesSagaState>,
 		var correlationId = new Guid(@event.UserProperties.FirstOrDefault(u => u.Key.Equals("CorrelationId")).Value.ToString()!);
 		var sagaState = await Repository.GetByIdAsync<SalesSagaState>(correlationId);
 
-		if (sagaState is null)
+		if (sagaState is null || sagaState.AvailabilityChecked)
 			return;
-
-		sagaState.AvailabilityChecked = true;
-		await Repository.SaveAsync(correlationId, SagaState);
 
 		// Verify availability
 		// With availability we create order
@@ -80,6 +77,10 @@ public class SalesOrderSaga : Saga<SalesSagaState>,
 			sagaState.Order.Rows.Select(r => r.ToBeerToDrawn()));
 
 		await ServiceBus.SendAsync(withdrawalFromWarehouse);
+
+		// Update SagaState
+		sagaState.AvailabilityChecked = true;
+		await Repository.SaveAsync(correlationId, sagaState);
 	}
 
 	public async Task HandleAsync(BroadcastBeerWithdrawn @event, CancellationToken cancellationToken = new())
@@ -111,7 +112,8 @@ public class SalesOrderSaga : Saga<SalesSagaState>,
 		if (sagaState is null)
 			return;
 
+		// Update SagaState
 		sagaState.SalesOrderCreated = true;
-		await Repository.SaveAsync(correlationId, SagaState);
+		await Repository.SaveAsync(correlationId, sagaState);
 	}
 }
