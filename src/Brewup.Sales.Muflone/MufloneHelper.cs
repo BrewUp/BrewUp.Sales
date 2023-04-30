@@ -1,5 +1,4 @@
-﻿using Azure.Messaging.ServiceBus;
-using Brewup.Sales.Muflone.Consumers.Commands;
+﻿using Brewup.Sales.Muflone.Consumers.Commands;
 using Brewup.Sales.Muflone.Consumers.Events;
 using Brewup.Sales.Shared.Commands;
 using Brewup.Sales.Shared.Configuration;
@@ -11,7 +10,6 @@ using Muflone;
 using Muflone.Persistence;
 using Muflone.Transport.Azure;
 using Muflone.Transport.Azure.Abstracts;
-using Muflone.Transport.Azure.Factories;
 using Muflone.Transport.Azure.Models;
 
 namespace Brewup.Sales.Muflone;
@@ -21,8 +19,8 @@ public static class MufloneHelper
 	public static IServiceCollection AddMuflone(this IServiceCollection services, ServiceBusSettings serviceBusSettings)
 	{
 		// I need to register IServiceBus and IEventBus due to Saga implementation
-		services.AddSingleton(new ServiceBusClient(serviceBusSettings.ConnectionString));
-		services.AddSingleton<IServiceBusSenderFactory, ServiceBusSenderFactory>();
+		//services.AddSingleton(new ServiceBusClient(serviceBusSettings.ConnectionString));
+		//services.AddSingleton<IServiceBusSenderFactory, ServiceBusSenderFactory>();
 		services.AddSingleton<IServiceBus, ServiceBus>();
 		services.AddSingleton<IEventBus, ServiceBus>();
 
