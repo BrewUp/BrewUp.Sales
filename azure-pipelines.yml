@@ -14,7 +14,7 @@ variables:
   imageRepository: 'sales'
   containerRegistry: 'brewup.azurecr.io'
   dockerfilePath: '$(Build.SourcesDirectory)/src/Dockerfile'
-  tag: '$(Build.BuildId)'
+  tag: '$(Build.BuildNumber)'
 
   # Agent VM image name
   vmImageName: 'ubuntu-latest'
