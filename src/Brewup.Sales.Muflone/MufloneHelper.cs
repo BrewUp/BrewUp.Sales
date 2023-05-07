@@ -1,9 +1,6 @@
 ﻿using Brewup.Sales.Muflone.Consumers.Commands;
-using Brewup.Sales.Muflone.Consumers.Events;
 using Brewup.Sales.Shared.Commands;
 using Brewup.Sales.Shared.Configuration;
-using Brewup.Sales.Shared.DomainEvents;
-using Brewup.Sales.Shared.IntegrationEvents;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Muflone;
@@ -35,14 +32,14 @@ public static class MufloneHelper
 		var consumers = new List<IConsumer>
 		{
 			new AskForBeersAvailabilityConsumer(repository!, azureBusConfiguration with { TopicName = nameof(AskForBeersAvailability)}, loggerFactory!),
-			new BeersAvailabilityAskedConsumer(serviceProvider, azureBusConfiguration with { TopicName = nameof(BeersAvailabilityAsked) }, loggerFactory!),
+			//new BeersAvailabilityAskedConsumer(serviceProvider, azureBusConfiguration with { TopicName = nameof(BeersAvailabilityAsked) }, loggerFactory!),
 
-			new WithdrawalFromWarehouseConsumer(repository!, azureBusConfiguration with { TopicName = nameof(WithdrawalFromWarehouse)}, loggerFactory!),
+			//new WithdrawalFromWarehouseConsumer(repository!, azureBusConfiguration with { TopicName = nameof(WithdrawalFromWarehouse)}, loggerFactory!),
 
-			new CreateSalesOrderConsumer(repository!, azureBusConfiguration with { TopicName = nameof(CreateSalesOrder)}, loggerFactory!),
-			new SalesOrderCreatedConsumer(serviceProvider, azureBusConfiguration with { TopicName = nameof(SalesOrderCreated)}, loggerFactory!),
+			//new CreateSalesOrderConsumer(repository!, azureBusConfiguration with { TopicName = nameof(CreateSalesOrder)}, loggerFactory!),
+			//new SalesOrderCreatedConsumer(serviceProvider, azureBusConfiguration with { TopicName = nameof(SalesOrderCreated)}, loggerFactory!),
 
-			new BroadcastBeerWithdrawnConsumer(serviceProvider, azureBusConfiguration with { TopicName = nameof(BroadcastBeerWithdrawn)}, loggerFactory !)
+			//new BroadcastBeerWithdrawnConsumer(serviceProvider, azureBusConfiguration with { TopicName = nameof(BroadcastBeerWithdrawn)}, loggerFactory !)
 		};
 
 		services.AddMufloneTransportAzure(
