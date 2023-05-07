@@ -10,9 +10,7 @@ public class SalesModule : IModule
 
 	public IServiceCollection RegisterModule(WebApplicationBuilder builder)
 	{
-		builder.Services.AddSalesModule();
-
-		return builder.Services;
+		return builder.Services.AddSalesModule();
 	}
 
 	public IEndpointRouteBuilder MapEndpoints(IEndpointRouteBuilder endpoints)
